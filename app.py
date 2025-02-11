@@ -1,32 +1,59 @@
-import syntaxmatrix as smx
+from openai import OpenAI
+from dotenv import load_dotenv
+import os
 
-# Enable dynamic theme toggle.
-smx.enable_theme_toggle()
+load_dotenv()
 
-# Set theme and UI mode.
-smx.set_theme("light")          # Options: "light" or "dark"
-smx.set_ui_mode("bubble")       # Options: "bubble", "card", or "default"
+# Set your OpenAI API key.
+OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
-# Register sidebar widgets.
-smx.sidebar_text_input("sidebar_input", "Sidebar Input:", placeholder="Type here...")
-smx.sidebar_button("sidebar_btn", "Do Sidebar Action", callback=lambda: smx.write("Sidebar action executed."))
+LLMs = [
+    OpenAI(api_key=OPENAI_API_KEY),
+    OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com")
+]
 
-def process_query():
-    query = smx.get_text_input_value("user_query", default="What is RAG?")
-    history = smx.get_chat_history()
-    history.append(("User", query))
-    response = f"Response to: {query}"
-    history.append(("Bot", response))
-    smx.set_chat_history(history)
-    smx.clear_text_input_value("user_query")
+MODELs = [
+    "gpt-4o-mini", 
+    'deepseek-chat', 
+]
 
-def clear_chat():
-    smx.clear_chat_history()
+PROFILE = os.getenv('PROFILE')
 
-smx.set_widget_position("bottom")
-smx.text_input("user_query", "Enter your RAG query:", placeholder="What is RAG?")
-smx.button("submit_query", "Submit Query", callback=process_query)
-smx.button("clear_chat", "Clear Chat", callback=clear_chat)
+chat_history = []
 
-if __name__ == "__main__":
-    smx.run()
+def process_query(query, chat_history):
+    
+    # Build the conversation for the OpenAI API.
+    prompt = [{"role": "system", "content": 
+               "You are an AI assistant with expertise in generating meaningful responses to queries " "based on given context."}]
+    
+    for sender, message in chat_history:
+        if sender == "User":
+            prompt.append({"role": "user", "content": message})
+        elif sender == "Bot":
+            prompt.append({"role": "assistant", "content": message})
+    prompt.append({"role": "user", "content": query})
+    
+    try:
+        response = LLMs[0].chat.completions.create(
+            model=MODELs[0], 
+            messages=prompt,
+            temperature=0.7,
+            max_tokens=150
+        )
+        answer = response.choices[0].message.content
+    except Exception as e:
+        answer = f"Error: {str(e)}"
+    print("Bot:", answer)
+    print()
+
+def create_conversation():
+    query = input("What is your query: ")
+    print()
+    while query != 'no':
+        process_query(query, chat_history)
+        query = input("You: ")
+        print()
+
+create_conversation()

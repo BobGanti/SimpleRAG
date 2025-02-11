@@ -1,1 +1,17 @@
 .env
+
+# Virtual Environment
+venv/
+.venv/
+env/
+
+# Secrets
+.env
+*.key
+
+# IDE
+.vscode/
+.idea/
+
+# OS
+.DS_Store
