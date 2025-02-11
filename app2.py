@@ -6,8 +6,10 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KKEY")
 llm = OpenAI(api_key=OPENAI_API_KEY)
+
+PROFILE = os.getenv('PROFILE')
 
 retrieved_chunks = [
 """The Enhanced Corrective Retrieval Augmented Generation (ECRAG) framework is introduced as an innovative approach to enhance the accuracy, relevance, and efficiency of information retrieval and response generation in knowledge augmented language models. Building upon existing systems like Retrieval Augmented""",
@@ -31,7 +33,7 @@ def process_query(query, history, chunks):
     prompt =[
         {
             "role": "system",
-            "content": "You are an AI assistant with expertise in generating meaningful responses to queries based on given context."
+            "content": PROFILE
         },
         {
             "role": "user",
@@ -60,8 +62,8 @@ def create_conversation():
     query = smx.get_text_input_value("user_query")
     chat_history = smx.get_chat_history()
     answer = process_query(query, chat_history, retrieved_chunks)
-    chat_history.append(("👤", query))
-    chat_history.append(("👾", answer))
+    chat_history.append(("👩🏿‍🦲", query))
+    chat_history.append(("👀", answer))
     
     smx.set_chat_history(chat_history)
     smx.clear_text_input_value("user_query")

@@ -5,8 +5,8 @@ import os
 load_dotenv()
 
 # Set your OpenAI API key.
-OPENAI_API_KEY = os.getenv('OPENAI_API_KEY')
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+OPENAI_API_KEY = os.getenv("OPENAI_API_KKEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KKEY")
 
 LLMs = [
     OpenAI(api_key=OPENAI_API_KEY),
@@ -25,14 +25,13 @@ chat_history = []
 def process_query(query, chat_history):
     
     # Build the conversation for the OpenAI API.
-    prompt = [{"role": "system", "content": 
-               "You are an AI assistant with expertise in generating meaningful responses to queries " "based on given context."}]
+    prompt = [{"role": "system", "content": PROFILE}]
     
     for sender, message in chat_history:
-        if sender == "User":
+        if sender == "👩🏿‍🦲":
             prompt.append({"role": "user", "content": message})
-        elif sender == "Bot":
-            prompt.append({"role": "assistant", "content": message})
+        elif sender == "👀":
+            prompt.append({"role": "assistant", "content": chat_history})
     prompt.append({"role": "user", "content": query})
     
     try:
@@ -55,5 +54,4 @@ def create_conversation():
         process_query(query, chat_history)
         query = input("You: ")
         print()
-
 create_conversation()
