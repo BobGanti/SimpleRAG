@@ -4,9 +4,9 @@ import os
 
 load_dotenv()
 
-# Set your OpenAI API key.
-OPENAI_API_KEY = os.getenv("OPENAI_API_KKEY")
-DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KKEY")
+# Set API key.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
 
 LLMs = [
     OpenAI(api_key=OPENAI_API_KEY),
@@ -50,7 +50,7 @@ def process_query(query, chat_history):
 def create_conversation():
     query = input("What is your query: ")
     print()
-    while query != 'no':
+    while query.lower() != 'x':
         process_query(query, chat_history)
         query = input("You: ")
         print()

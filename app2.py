@@ -6,8 +6,22 @@ from dotenv import load_dotenv
 
 load_dotenv()
 
-OPENAI_API_KEY = os.getenv("OPENAI_API_KKEY")
-llm = OpenAI(api_key=OPENAI_API_KEY)
+# Set API key.
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+XAI_API_KEY = os.getenv('XAI_API_KEY')
+
+LLMs = [
+    OpenAI(api_key=OPENAI_API_KEY),
+    OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com"),
+    OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1"),
+]
+
+MODELs = [
+    "gpt-4o-mini", 
+    'deepseek-chat', 
+    'grok-2-latest',
+]
 
 PROFILE = os.getenv('PROFILE')
 
@@ -19,15 +33,12 @@ retrieved_chunks = [
 """Knowledge detection mechanisms help identify whether a query can be answered using internal domain knowledge or requires external augmentation. Traditional approaches rely on LLM confidence scores or simple keyword matching, but these methods are prone to false positives and negatives. Recent research combines lexical (e.g., BM25) and semantic (e.g., cosine similarity)"""
 ]
 
+# Setup 
+# smx.set_ui_mode("default") or "bubble", "card"
+smx.set_project_title(f"👀SMX UI")    
 smx.enable_theme_toggle()
-smx.set_widget_position("bottom")
-smx.set_project_title("👀Syntax UI")
-smx.set_theme("light")     
-smx.set_ui_mode("bubble") 
+# smx.set_theme("dark")   or "default"
 
-# Register sidebar widgets.
-smx.sidebar_text_input("sidebar_input", "Sidebar Input:", placeholder="Type here...")
-smx.sidebar_button("sidebar_btn", "Do Sidebar Action", callback=lambda: smx.write("Sidebar action executed."))
 
 def process_query(query, history, chunks): 
     prompt =[
@@ -46,8 +57,8 @@ def process_query(query, history, chunks):
     ]
 
     try:
-        response = llm.chat.completions.create(
-            model="gpt-4o-mini",
+        response = LLMs[2].chat.completions.create(
+            model=MODELs[2],
             messages=prompt,
             temperature=0.3,
             max_tokens=300
@@ -71,7 +82,7 @@ def create_conversation():
 def clear_chat():
     smx.clear_chat_history()
 
-smx.text_input("user_query", "Enter query:", placeholder="Type here...")
+smx.text_input("user_query", "Enter query:")
 smx.button("submit_query", "Submit", callback=create_conversation) 
 smx.button("clear_chat", "Clear Chat", callback=clear_chat)
 
