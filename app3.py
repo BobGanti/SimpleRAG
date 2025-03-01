@@ -49,6 +49,30 @@ MODELs = [
 llm = LLMs[0]
 model = MODELs[0]
 
+# # Project Settings 
+custom_theme = {
+    "background": "#ffffff",
+    "text_color": "#000000",
+    "nav_background": "#123456",
+    "nav_text": "#ffffff",
+    "chat_background": "#f7f7f7",
+    "chat_border": "#cccccc",
+    "widget_background": "#dddddd",
+    "widget_border": "#123456",
+    "sidebar_background": "#eeeeee",
+    "sidebar_text": "#333333"
+}
+smx.set_theme("my", custom_theme)
+
+smx.set_site_title("smx")
+smx.set_site_logo("SMX")
+smx.set_user_icon("👩🏿‍🦲")
+smx.set_bot_icon("👀")
+smx.set_site_icon("𓃑")
+smx.set_project_title("SMX UI")    
+smx.enable_theme_toggle()
+smx.set_ui_mode("default")
+
 def process_query(query, history, chunks=""): 
     INSTRUCTION = "Generate a response to the given query, limiting your knowledge " "to the given content. Also refer to the chat history if needed."
     prompt =[
@@ -86,7 +110,7 @@ def clear_chat():
 
 smx.text_input("user_query", "Enter query:")
 smx.button("submit_query", "Submit", callback=create_conversation) 
-# smx.button("clear_chat", "Clear Chat", callback=clear_chat)
+smx.button("clear_chat", "Clear Chat", callback=clear_chat)
 
 if __name__ == "__main__":
     smx.run()
