@@ -25,7 +25,7 @@ chat_history = []
 def process_query(query, chat_history):
     
     # Build the conversation for the OpenAI API.
-    prompt = [{"role": "system", "content": PROFILE}]
+    prompt = [{"role": "system", "content": "You are a helpful assistant that generates responses to queries based on knowledge and history."}]
     
     for sender, message in chat_history:
         if sender == "👩🏿‍🦲":
