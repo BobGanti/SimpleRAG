@@ -3,9 +3,7 @@ from syntaxmatrix.plottings import figure, plotly
 import os
 from openai import OpenAI
 from dotenv import load_dotenv
-from syntaxmatrix.file_processor import recursive_text_split
-from io import BytesIO
-from PyPDF2 import PdfReader
+
 
 load_dotenv(override=False, verbose=False)
 
