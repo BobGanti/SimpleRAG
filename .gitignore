@@ -1,19 +1,70 @@
-.env
+uploads/
 
-# Virtual Environment
+# Byte-compiled and cache files
+__pycache__/
+*.pyc
+*.py[cod]
+*.so
+
+# Virtual environment directory
 venv/
-.venv/
-env/
+.env/
+.envrc
+*.venv
+Pipfile
+Pipfile.lock
+setup.py
+pyproject.toml
 
-# Secrets
-.env
-*.key
-
-# IDE
-.vscode/
-.idea/
-
-# OS
+# macOS system files
 .DS_Store
 
-   uploads/
+# VS Code settings
+.vscode/
+
+# Logs and local database files
+*.log
+*.sqlite3
+*.db
+syntaxmatrix/db.py
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Python packaging
+build/
+dist/
+*.egg-info/
+*.egg
+*.manifest
+*.spec
+
+# pytest and coverage reports
+.coverage
+.cache/
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+*.pytest_cache/
+htmlcov/
+
+# Docker & Deployment
+.dockerignore
+*.env
+docker-compose.override.yml
+
+# Node.js dependency cache (if using frontend)
+node_modules/
+
+# Ignore compiled Cython files
+*.c
+*.so
+*.o
+*.h
+
+# Ignore temporary files and backups
+*.bak
+*.swp
+*.swo
+*.tmp
