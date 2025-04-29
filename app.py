@@ -22,18 +22,21 @@ LLMs = [
 MODELs = {
     "gpt":["gpt-4o-mini"], 
     "deepseek":["deepseek-chat"], 
-    "grok":["grok-2-latest", "grok-3"],
-    "gemini":["gemini-2.0-flash-lite", "gemini-2.0-flash", "gemini-2.5-pro"]
+    "grok":["grok-2-latest"],
+    "gemini":["gemini-2.0-flash-lite", "gemini-2.0-flash"]
 }
 
 llm = LLMs[3]
 model = MODELs["gemini"][0]
 
-smx.set_ui_mode("bubble")
-# smx.set_site_icon("𓃑")
-# smx.set_site_logo("ABC")
-# smx.set_project_title("ABC DATA")
-# smx.set_site_title("ABC")
+smx.set_ui_mode("bubble")  # [default, card, bubble, smx]
+smx.set_project_title("RAG With Custom Data") 
+smx.set_site_logo("SMX-DEMO")
+smx.set_site_title("smx-demo")
+smx.set_user_icon("😸")
+smx.set_bot_icon("💀")
+smx.set_site_icon("👃")   
+smx.enable_theme_toggle()
 
 sys_chunks = smx.load_pdf_chunks()
 
