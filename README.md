@@ -1,6 +1,7 @@
-# syntaxmatrix UI Framework v1.2.1
+# syntaxmatrix Framework v1.2.1
 
 **SyntaxMUI:** A customizable UI framework for Python AI assistant projects.
+
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
@@ -8,7 +9,7 @@
 
 ## Overview
 
-`syntaxmatrix` (lowercase) is a lightweight, Pythonic UI library that lets you build interactive chat-style front-ends for AI apps without diving into a full web framework. It provides:
+`syntaxmatrix` (lowercase) is a full-stack Python library that lets you build interactive chat-style front-ends for AI apps without diving into a full web framework. It provides:
 
 - Rapid widget registration (text inputs, buttons, file uploaders)
 - Dynamic theme toggling and multiple UI modes
@@ -16,30 +17,28 @@
 - Stylized feedback (success, error, warning, info)
 - Admin panel, session management, and more
 
-Ideal for Retrieval-Augmented Generation (RAG) demos, data explorers, or any AI assistant interface.
+Ideal for Retrieval-Augmented Generation (RAG), data explorers, or any AI assistant interface.
 
 ---
 
 ## Quick Links
 
-- **Documentation:** https://github.com/bobganti/SyntaxMatrix
-- **PyPI:** `pip install syntaxmatrix==1.2.0`
-- **Source:** https://github.com/bobganti/SyntaxMatrix
-
+- **Documentation:** https://github.com/bobganti/SimpleRAG
+- **PyPI:** `pip install syntaxmatrix==1.2.1`
 ---
 
 ## Features
 
 - **Rapid UI Creation**: One-line calls to register `text_input`, `button`, `file_uploader`, etc.
-- **Built-in Chat Loop**: Core `/process_chat` endpoint automatically wires three keys:
+- **Built-in Chat Loop**:
   - `user_query` (text input),
   - `submit_query` (send button),
   - `user_pdfs` (PDF uploader + chunking).
 - **Custom Widgets**: Register any keys you like—just provide matching handler logic.
-- **PDF Ingestion**: `load_pdf_chunks(directory)` scans a folder, splits PDFs into chunks, caches in SQLite, and returns a `{filename: [chunks,…]}` map.
-- **Session File Uploads**: `get_user_chunks()`, `add_user_chunks()`, `clear_user_chunks()` for per-session user files.
+- **PDF Ingestion**: `load_pdf_chunks(directory)` Domain data that augments LLM's knowledge/ and returns a `{filename: [chunks,…]}` map.
+- **Session File Uploads**: `get_user_chunks()`, for per-session user files.
 - **Dynamic Themes**: `enable_theme_toggle()`, `set_theme()`, plus `list_themes()`.
-- **Multiple UI Modes**: `set_ui_mode()` supports `default`, `bubble`, `card`, **`smx`** (new!) and `list_ui_modes()`.
+- **Multiple UI Modes**: `set_ui_mode()` supports `default`, `bubble`, `card`, `smx` and `list_ui_modes()`.
 - **Rich Output**: `markdown()`, `latex()`, `plt_plot()`, `plotly_plot()`, plus `error()`, `warning()`, `success()`, `info()`.
 - **Branding Helpers**: `set_user_icon()`, `set_bot_icon()`, `set_site_icon()`, `set_site_logo()`, `set_site_title()`, `set_project_title()`.
 - **Session Management**: Named chat sessions with rename/delete; session IDs via `get_session_id()`.
@@ -52,72 +51,117 @@ Ideal for Retrieval-Augmented Generation (RAG) demos, data explorers, or any AI 
 pip install syntaxmatrix==1.2.1
 ```
 
-**Dependencies**
-
-- Python >= 3.7
-- Flask >= 2.0.0
-- requests >= 2.0.0
-- markdown >= 3.3.0
-- matplotlib >= 3.5.0
-- plotly >= 5.0.0
-- openai >= 0.27.0
-- PyPDF2 >= 1.26.0
-- numpy >= 1.21.0
-
-Optional extras:
-
-```bash
-# Transformer models & torch
-pip install syntaxmatrix[advanced_nlp]
-
-# pandas for data APIs
-pip install syntaxmatrix[data]
-
-# Testing
-pip install syntaxmatrix[testing]
-```
-
----
-
 ## Quick-Start Snippet
 
 This minimal example uses the **built-in** chat flow (no custom keys required):
 
 ```python
 import syntaxmatrix as smx
+from syntaxmatrix.plottings import figure, plotly
+import os
+from openai import OpenAI
+from dotenv import load_dotenv
 
-# Handler for text-submission
+
+load_dotenv(override=False, verbose=False)
+
+OPENAI_API_KEY = os.getenv("OPENAI_API_KEY")
+DEEPSEEK_API_KEY = os.getenv("DEEPSEEK_API_KEY")
+XAI_API_KEY = os.getenv("XAI_API_KEY")
+GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
+PROFILE = os.getenv("PROFILE")
+
+LLMs = {
+    "gpt": OpenAI(api_key=OPENAI_API_KEY),
+    "deepseek": OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com"),
+    "grok": OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1"),
+    "gemini": OpenAI(api_key=GEMINI_API_KEY, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"),
+}
+MODELs = {
+    "gpt":["gpt-4o-mini"], 
+    "deepseek":["deepseek-chat"], 
+    "grok":["grok-2-latest"],
+    "gemini":["gemini-2.0-flash-lite", "gemini-2.0-flash"]
+}
+
+llm = LLMs["gpt"]
+model = MODELs["gpt"][0]
+
+smx.set_ui_mode("bubble")  # [default, card, bubble, smx]
+smx.set_project_title("RAG With Custom Data") 
+smx.set_site_logo("SMX-DEMO")
+smx.set_site_title("smx-demo")
+smx.set_user_icon("😸")
+smx.set_bot_icon("💀")
+smx.set_site_icon("👃")   
+smx.enable_theme_toggle()
+
+sys_chunks = smx.load_pdf_chunks()
+
+def process_query(query, history, context): 
+    INSTRUCTION = """Generate a response to the given query based on the given content. Use the chat history to stay in context. Refer to your training knowledge if content lacks sufficient knowledge to generate a response.
+    """
+    prompt = [
+        {"role": "system", "content": PROFILE},
+        {"role": "user", "content": INSTRUCTION},
+        {"role": "assistant", "content": f"Query: {query}\n\nContext: {context}\n\nHistory: {history}\n\nAnswer: "}
+    ]
+
+    try:
+        response = llm.chat.completions.create(
+            model=model,
+            messages=prompt,
+            temperature=0.3,
+            max_tokens=500
+        )
+        answer = response.choices[0].message.content
+    except Exception as e:
+        answer = f"Error: {str(e)}"
+    return answer 
+
 def create_conversation():
-    q = smx.get_text_input_value("user_query").strip()
-    if not q:
-        smx.warning("Please enter a question.")
+    chat_history = smx.get_chat_history()
+    sid = smx.get_session_id()
+
+    # Get any user-uploaded files and process them
+    personal_chunks = smx.get_user_chunks(sid) or []
+    context = list(sys_chunks.values())
+    # Augment the Domain data wit the user data
+    if personal_chunks:
+        for p_ch in personal_chunks:
+            context.append(p_ch)
+
+    query = smx.get_text_input_value("user_query").strip()
+    # Handle the "Enter" keyboard key if pressed when the text input is empty.
+    if not query:  
+        smx.warning("Enter a query.")
         return
-    # …your AI call or logic here…
-    smx.success(f"You asked: {q}")
 
-# UI setup
-smx.set_ui_mode("smx")               # new "smx" display style
-smx.enable_theme_toggle()            # add light/dark toggle
+    # Consider only the last n=10 chat cycles in the chat history
+    trimmed_history = chat_history[-10:] if len(chat_history) > 10 else chat_history
+    answer = process_query(query, trimmed_history, context)
 
-# Activate built-in widgets (must use these keys)
-smx.text_input(
-    "user_query",                  # text box
-    "Ask me anything…",            # label
-    placeholder="Type your question here…"
-)
-smx.button(
-    "submit_query",                # send button key
-    "Send",                        # label
-    callback=create_conversation    # invoked on send
-)
-smx.file_uploader(
-    "user_pdfs",                   # PDF uploader key
-    "Upload PDFs",                 # label
-    accept_multiple_files=True     # chunking happens automatically
-)
+    chat_history.append(("User", query))
+    chat_history.append(("Bot", answer))
+
+    smx.set_chat_history(chat_history)
+    smx.clear_text_input_value("user_query")
+
+
+def clear_chat():
+    smx.clear_chat_history()
+
+# Activate System Widgets
+smx.text_input("user_query", "Enter query:", placeholder="Type your query here...")
+smx.button("submit_query", "Submit", callback=create_conversation) 
+smx.file_uploader("user_pdfs", "Upload PDF files:", accept_multiple_files=True)
+
+# Register Custom Widgets
+smx.button("clear_chat", "Clear Chat", callback=clear_chat)
 
 if __name__ == "__main__":
     smx.run()
+
 ```
 
 > **Note:** If you register different keys, you must also adapt your handlers and/or the request-processing logic to match those names.
