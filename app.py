@@ -13,12 +13,12 @@ XAI_API_KEY = os.getenv("XAI_API_KEY")
 GEMINI_API_KEY = os.getenv("GEMINI_API_KEY")
 PROFILE = os.getenv("PROFILE")
 
-LLMs = [
-    OpenAI(api_key=OPENAI_API_KEY),
-    OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com"),
-    OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1"),
-    OpenAI(api_key=GEMINI_API_KEY, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"),
-]
+LLMs = {
+    "gpt": OpenAI(api_key=OPENAI_API_KEY),
+    "deepseek": OpenAI(api_key=DEEPSEEK_API_KEY, base_url="https://api.deepseek.com"),
+    "grok": OpenAI(api_key=XAI_API_KEY, base_url="https://api.x.ai/v1"),
+    "gemini": OpenAI(api_key=GEMINI_API_KEY, base_url="https://generativelanguage.googleapis.com/v1beta/openai/"),
+}
 MODELs = {
     "gpt":["gpt-4o-mini"], 
     "deepseek":["deepseek-chat"], 
@@ -26,8 +26,8 @@ MODELs = {
     "gemini":["gemini-2.0-flash-lite", "gemini-2.0-flash"]
 }
 
-llm = LLMs[3]
-model = MODELs["gemini"][0]
+llm = LLMs['gpt']
+model = MODELs['gpt'][0]
 
 smx.set_ui_mode("bubble")  # [default, card, bubble, smx]
 smx.set_project_title("RAG With Custom Data") 
@@ -38,10 +38,10 @@ smx.set_bot_icon("💀")
 smx.set_site_icon("👃")   
 smx.enable_theme_toggle()
 
-sys_chunks = smx.load_pdf_chunks()
+sys_chunks = smx.load_sys_chunks()
 
 def process_query(query, history, context): 
-    INSTRUCTION = """Generate a response to the given query based on the given content. Use the chat history to stay in context. Refer to your training knowledge if content lacks sufficient knowledge to generate a response.
+    INSTRUCTION = """Generate a response to the given query based on the given context. Use the chat history to stay in context. Refer to your training knowledge if content lacks sufficient knowledge to generate a response. Your response should not include preambles. Even if not explicitly requested in the query but should the response require a list, output a markdown ordered (<ol>) or unoredered (<ul>) list format as appropriate. 
     """
     prompt = [
         {"role": "system", "content": PROFILE},
@@ -73,7 +73,6 @@ def create_conversation():
 
     query = smx.get_text_input_value("user_query").strip()
     if not query:
-        smx.warning("Enter a query.")
         return
 
     trimmed_history = chat_history[-10:] if len(chat_history) > 10 else chat_history
@@ -84,15 +83,6 @@ def create_conversation():
 
     smx.set_chat_history(chat_history)
     smx.clear_text_input_value("user_query")
-  
-def analysis():  
-   
-    return
-
-analysis()
-
-def clear_chat():
-    smx.clear_chat_history()
 
 # Activate System Widgets
 smx.text_input("user_query", "Enter query:", placeholder="Type your query here...")
@@ -100,8 +90,17 @@ smx.button("submit_query", "Submit", callback=create_conversation)
 smx.file_uploader("user_pdfs", "Upload PDF files:", accept_multiple_files=True)
 
 # Register Custom Widgets
+def analysis():  
+    smx.write(sys_chunks)
+
+    return
+
+def clear_chat():
+    smx.clear_chat_history()
+
 smx.button("clear_chat", "Clear Chat", callback=clear_chat)
 smx.button("analysis", "Analyse", callback=analysis)
+
 
 if __name__ == "__main__":
     smx.run()

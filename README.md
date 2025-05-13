@@ -1,4 +1,4 @@
-# syntaxmatrix Framework v1.2.1
+# syntaxmatrix Framework
 
 **SyntaxMUI:** A customizable UI framework for Python AI assistant projects.
 
@@ -23,8 +23,7 @@ Ideal for Retrieval-Augmented Generation (RAG), data explorers, or any AI assist
 
 ## Quick Links
 
-- **Documentation:** https://github.com/bobganti/SimpleRAG
-- **PyPI:** `pip install syntaxmatrix==1.2.1`
+- `pip install syntaxmatrix`
 ---
 
 ## Features
@@ -48,7 +47,12 @@ Ideal for Retrieval-Augmented Generation (RAG), data explorers, or any AI assist
 ## Installation
 
 ```bash
-pip install syntaxmatrix==1.2.1
+pip install syntaxmatrix
+```
+or if upgrading
+
+```bash
+pip install --upgrade syntaxmatrix
 ```
 
 ## Quick-Start Snippet
@@ -88,13 +92,14 @@ llm = LLMs["gpt"]
 model = MODELs["gpt"][0]
 
 smx.set_ui_mode("bubble")  # [default, card, bubble, smx]
-smx.set_project_title("RAG With Custom Data") 
-smx.set_site_logo("SMX-DEMO")
-smx.set_site_title("smx-demo")
+smx.set_theme("chark", "chark")
+smx.set_project_title("RAG System") 
+smx.set_site_logo("SMX")
+smx.set_site_title("smx")
 smx.set_user_icon("😸")
 smx.set_bot_icon("💀")
 smx.set_site_icon("👃")   
-smx.enable_theme_toggle()
+# smx.enable_theme_toggle()
 
 sys_chunks = smx.load_pdf_chunks()
 
@@ -147,17 +152,17 @@ def create_conversation():
     smx.set_chat_history(chat_history)
     smx.clear_text_input_value("user_query")
 
-
-def clear_chat():
-    smx.clear_chat_history()
-
 # Activate System Widgets
 smx.text_input("user_query", "Enter query:", placeholder="Type your query here...")
 smx.button("submit_query", "Submit", callback=create_conversation) 
 smx.file_uploader("user_pdfs", "Upload PDF files:", accept_multiple_files=True)
 
 # Register Custom Widgets
+def clear_chat():
+    smx.clear_chat_history()
+
 smx.button("clear_chat", "Clear Chat", callback=clear_chat)
+
 
 if __name__ == "__main__":
     smx.run()
@@ -252,4 +257,4 @@ Then your `my_ask_handler()` must read from `smx.get_text_input_value("query_box
 
 ## License
 
-MIT © Bob Nti
+MIT © Bob Bobga Nti
