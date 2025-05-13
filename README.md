@@ -101,7 +101,7 @@ smx.set_bot_icon("💀")
 smx.set_site_icon("👃")   
 # smx.enable_theme_toggle()
 
-sys_chunks = smx.load_pdf_chunks()
+sys_chunks = smx.load_sys_chunks()
 
 def process_query(query, history, context): 
     INSTRUCTION = """Generate a response to the given query based on the given content. Use the chat history to stay in context. Refer to your training knowledge if content lacks sufficient knowledge to generate a response.
