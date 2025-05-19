@@ -9,7 +9,7 @@
 
 ## Overview
 
-`syntaxmatrix` (lowercase) is a full-stack Python library that lets you build interactive chat-style front-ends for AI apps without diving into a full web framework. It provides:
+`syntaxmatrix` is a full-stack Python library that lets you build interactive chat-style front-ends for AI apps without diving into a full web framework. It provides:
 
 - Rapid widget registration (text inputs, buttons, file uploaders)
 - Dynamic theme toggling and multiple UI modes
