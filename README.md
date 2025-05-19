@@ -1,6 +1,6 @@
-# syntaxmatrix Framework
+# SyntaxMatrix AI Framework v1.3.1
 
-**SyntaxMUI:** A customizable UI framework for Python AI assistant projects.
+**SyntaxMatrix:** A customizable framework for Python AI assistant projects.
 
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
