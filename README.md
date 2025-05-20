@@ -5,9 +5,11 @@
 **GIFT:**
 [![Demo](demo-preview.gif)](https://www.youtube.com/watch?v=PtGH1kaWm9M)
 
+---
 **DEMO:**
 [![Watch the video](https://img.youtube.com/vi/PtGH1kaWm9M/0.jpg)](https://www.youtube.com/watch?v=PtGH1kaWm9M)
 
+---
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
 ---
