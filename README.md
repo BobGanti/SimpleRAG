@@ -4,10 +4,6 @@
 
 ---
 **DEMO:**
-<a href="https://www.youtube.com/watch?v=PtGH1kaWm9M" target="_blank">
-  <img src="https://img.youtube.com/vi/PtGH1kaWm9M/0.jpg" width="400">
-</a>
-
 <table>
   <tr>
     <td>
@@ -24,9 +20,6 @@
     </td>
   </tr>
 </table>
-
-
-
 ---
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
