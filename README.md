@@ -8,6 +8,24 @@
   <img src="https://img.youtube.com/vi/PtGH1kaWm9M/0.jpg" width="400">
 </a>
 
+<table>
+  <tr>
+    <td>
+      <a href="https://www.youtube.com/watch?v=PtGH1kaWm9M" target="_blank">
+        <img src="https://img.youtube.com/vi/PtGH1kaWm9M/0.jpg" width="270">
+      </a>
+      <p align="center"><strong>Demo Video</strong></p>
+    </td>
+    <td>
+      <a href="https://www.youtube.com/watch?v=6CS5_ScJdrw" target="_blank">
+        <img src="https://img.youtube.com/vi/6CS5_ScJdrw/0.jpg" width="270">
+      </a>
+      <p align="center"><strong>Tutorial Video</strong></p>
+    </td>
+  </tr>
+</table>
+
+
 
 ---
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
