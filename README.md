@@ -2,6 +2,7 @@
 
 **SyntaxMatrix:** A customizable framework for Python AI assistant projects.
 
+[![Watch the demo](https://img.youtube.com/vi/dQw4w9WgXcQ/0.jpg)](https://youtu.be/PtGH1kaWm9M)
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-blue.svg)](LICENSE)
 
